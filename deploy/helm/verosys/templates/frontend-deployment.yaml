@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: verosys-frontend }
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector: { matchLabels: { app: verosys-frontend } }
+  template:
+    metadata: { labels: { app: verosys-frontend } }
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.image.repository }}-frontend:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports: [{ containerPort: 3000 }]
+          envFrom: [{ configMapRef: { name: verosys-config } }]
+          resources: {{- toYaml .Values.frontend.resources | nindent 12 }}

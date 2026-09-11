@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: verosys-worker }
+spec:
+  replicas: {{ .Values.worker.replicas }}
+  selector: { matchLabels: { app: verosys-worker } }
+  template:
+    metadata: { labels: { app: verosys-worker } }
+    spec:
+      containers:
+        - name: worker
+          image: "{{ .Values.image.repository }}-backend:{{ .Values.image.tag }}"
+          command: ["celery", "-A", "config", "worker", "--loglevel=INFO"]
+          envFrom: [{ configMapRef: { name: verosys-config } }, { secretRef: { name: verosys-secret } }]
+          resources: {{- toYaml .Values.worker.resources | nindent 12 }}

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: verosys
+description: Verosys multi-tenant platform foundation
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

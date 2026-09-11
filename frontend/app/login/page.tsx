@@ -1,0 +1,7 @@
+"use client";
+import Link from "next/link";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { api } from "@/lib/api/client";
+import { saveSession } from "@/lib/auth/session";
+export default function LoginPage() { const router = useRouter(); const [error, setError] = useState(""); async function submit(e: FormEvent<HTMLFormElement>) { e.preventDefault(); const form = new FormData(e.currentTarget); try { const tokens = await api<{access:string;refresh:string}>("/auth/login/", {method:"POST", body: JSON.stringify({username:form.get("username"), password:form.get("password")})}); saveSession(tokens.access, tokens.refresh); router.push("/"); } catch (err) { setError(err instanceof Error ? err.message : "Unable to sign in"); }} return <main className="mx-auto flex min-h-screen max-w-sm items-center p-6"><form className="w-full space-y-4 rounded-lg border bg-white p-6 shadow-sm" onSubmit={submit}><h1 className="text-xl font-semibold">Sign in to Verosys</h1><label className="block text-sm">Username<input required name="username" autoComplete="username" /></label><label className="block text-sm">Password<input required type="password" name="password" autoComplete="current-password" /></label>{error && <p className="text-sm text-red-700">{error}</p>}<button className="w-full rounded-md bg-slate-900 py-2 text-sm font-medium text-white">Sign in</button><p className="text-sm text-slate-600">New to Verosys? <Link className="underline" href="/register">Create an organization</Link></p></form></main>; }

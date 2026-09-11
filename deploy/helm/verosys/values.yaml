@@ -1,0 +1,21 @@
+image:
+  repository: ghcr.io/verosys/verosys
+  tag: latest
+  pullPolicy: IfNotPresent
+frontend: { replicas: 1, resources: {} }
+backend: { replicas: 1, resources: {} }
+worker: { replicas: 1, resources: {} }
+service: { frontendPort: 3000, backendPort: 8000 }
+ingress: { enabled: false, className: "", host: verosys.example.com, tls: [] }
+env:
+  DJANGO_DEBUG: "false"
+  DJANGO_ALLOWED_HOSTS: verosys.example.com
+  POSTGRES_HOST: ""
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: verosys
+  POSTGRES_USER: verosys
+  REDIS_URL: ""
+  NEXT_PUBLIC_API_URL: /api/v1
+secrets:
+  djangoSecretKey: ""
+  postgresPassword: ""

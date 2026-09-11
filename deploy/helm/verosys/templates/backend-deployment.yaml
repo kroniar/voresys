@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: verosys-backend }
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector: { matchLabels: { app: verosys-backend } }
+  template:
+    metadata: { labels: { app: verosys-backend } }
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.image.repository }}-backend:{{ .Values.image.tag }}"
+          ports: [{ containerPort: 8000 }]
+          envFrom: [{ configMapRef: { name: verosys-config } }, { secretRef: { name: verosys-secret } }]
+          resources: {{- toYaml .Values.backend.resources | nindent 12 }}
